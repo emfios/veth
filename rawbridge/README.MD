@@ -1,14 +1,14 @@
 Redirects received raw ethernet framews from "enp03" interface to a UDP socket and vice versa.
 
-VirtualBox Setup
+VirtualBox Adapter Setup
 ----------------
-Setup 'Adapter 1' <br>
-![alt_text](adapter1.png)
-Setup 'Adapter 2' <br>
-![alt text](adapter1.png)
+Setup 'Adapter 1' 
+<br>![adapter1](adapter1.png)<br>
+Setup 'Adapter 2'
+<br>![adapter2](adapter1.png)<br>
 Make sure Host only interface matches with following setting.
-![alt text](host_interface1.png)
-![alt text](host_interface2.png)
+<br>![host_interface1](host_interface1.png)
+<br>![host_interface2](host_interface2.png)
 
 Setup
 -----
