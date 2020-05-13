@@ -2,10 +2,10 @@ Redirects received raw ethernet framews from "enp03" interface to a UDP socket a
 
 VirtualBox Adapter Setup
 ----------------
-Setup 'Adapter 1' 
+Setup 'Adapter 1' as 'Bridge Adapter'. Set Promiscuous mode as Allow All.
 <br>![adapter1](adapter1.png)<br>
-Setup 'Adapter 2'
-<br>![adapter2](adapter1.png)<br>
+Setup 'Adapter 2' as 'Host only Adapter'. 
+<br>![adapter2](adapter2.png)<br>
 Make sure Host only interface matches with following setting.
 <br>![host_interface1](host_interface1.png)
 <br>![host_interface2](host_interface2.png)
