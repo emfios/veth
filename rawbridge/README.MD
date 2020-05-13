@@ -1,4 +1,4 @@
-Redirects received raw ethernet framews from "enp03" interface to a UDP socket and vice versa.
+Redirects received raw ethernet framews from "enp0s3" interface to a UDP socket of "enp0s8" and vice versa.
 
 VirtualBox Adapter Setup
 ----------------
