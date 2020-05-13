@@ -1,13 +1,25 @@
 Redirects received raw ethernet framews from "enp03" interface to a UDP socket and vice versa.
 
-Setup
-
-Refer rawsend and installed required.
-
 VirtualBox Setup
+----------------
+Setup 'Adapter 1'
 
+Setup 'Adapter 2'
 
+Make sure Host only interface matches with following setting.
 
+Setup
+-----
+install Python
+
+    sudo apt-get install python3
+
+install scapy
+
+    sudo apt-get install scapy
+
+verify both interfaces is up
+    ifconfig
 <pre>enp0s3: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
         inet 192.168.0.10  netmask 255.255.255.0  broadcast 192.168.0.255
         inet6 fe80::4189:181f:8063:4095  prefixlen 64  scopeid 0x20&lt;link&gt;
