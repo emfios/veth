@@ -1,6 +1,7 @@
 # veth
-Redirect network interface packets to a UDP socket and vice versa. 
+Programs to send / receive raw ethernet frames.
 
-'/rawbridge' Redirect network interface packets to a UDP socket and vice versa.
-
-'/rawsend'   ARP scan
+|folder|notes|
+--------------
+|rawbridge|Redirect network interface packets to a UDP socket and vice versa.
+|rawsend|ARP scanner
