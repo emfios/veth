@@ -1,4 +1,4 @@
-Redirects received raw ethernet framews from "enp0s3" interface to a UDP socket of "enp0s8" and vice versa.
+Redirects received raw ethernet frames from "enp0s3" interface to a UDP socket of "enp0s8" and vice versa.
 
 VirtualBox Adapter Setup
 ----------------
@@ -20,7 +20,7 @@ install scapy
 
     sudo apt-get install scapy
 
-verify both interfaces is up
+verify both interfaces is up. (enp0s3 is 'Bridge Adapter' and enp0s8 is 'Host only Adapter')
     ifconfig
 <pre>enp0s3: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
         inet 192.168.0.10  netmask 255.255.255.0  broadcast 192.168.0.255
@@ -42,5 +42,4 @@ enp0s8: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
 
 Usage
 
-    sudo python rawbridge.py --iface "enp0s3" --local_ipaddr "169.254.0.2" --dst_ipaddr "169.254.162.120"
-
+    sudo python rawbridge_m.py --iface "enp0s3" --iface_ipaddr "169.254.0.2"
