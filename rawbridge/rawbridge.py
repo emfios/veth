@@ -4,26 +4,25 @@ import socket
 import struct
 from scapy.all import *
 
+sender_mcast_address    = '224.0.0.1'
+receiver_mcast_address  = '224.0.0.1'
+sender_port             = 9000
+receiver_port           = 8000
+veth_mac_address        = "60:36:DD:98:B6:53"
+
 def raw_receiver(sock, iface, udp_dst):
     print("raw_receiver")
     print(iface)
 
     def sniff_callback(pkt):
-        #print("r")
-        #pkt.show(dump=False)
-        #print(pkt.sprintf("SRC:%Ether.src% DST:%Ether.dst% Type: %Ether.type%"))
+        #print(pkt.sprintf("Rx>SRC:%Ether.src% DST:%Ether.dst% Type: %Ether.type%"))
         if (not pkt.haslayer(Ether)):
             print("not a Ether packet")
             return
-        #print(pkt.sprintf("SR2:%Ether.src% DST:%Ether.dst% Type: %Ether.type%"))
         dst = pkt[Ether].dst
         dst = dst.upper()
-        #print(dst.upper())
-        #if (dst == "7a:67:d7:d0:75:64" or dst == "FF:FF:FF:FF:FF:FF"):
-        if (dst == "60:36:DD:98:B6:53" or dst == "FF:FF:FF:FF:FF:FF"):
-        #if True:
-            #print(pkt.sprintf("SRC:%Ether.src% DST:%Ether.dst% Type: %Ether.type%"))
-            #pkt[Ether].dst = "12:34:56:78:9A:BC"
+        if (dst == veth_mac_address or dst == "FF:FF:FF:FF:FF:FF"):
+            #print(pkt.sprintf("Rx>SRC:%Ether.src% DST:%dst% Type: %Ether.type%"))
             sock.sendto(bytes(pkt),udp_dst)
         
     sniff(prn=sniff_callback, store=0, iface=iface)
@@ -31,16 +30,14 @@ def raw_receiver(sock, iface, udp_dst):
 def raw_transmitter(sock,iface):
     print("raw_transmitter")
     print(iface)
-
     # read from udp and send it to scapy
     while True:
         data,addr = sock.recvfrom(65535)
-	print(len(data))
+	#print(len(data))
         if data:
             pkt = Ether(data)
-            #pkt[Ether].src = "08:00:27:5C:39:DC"
-            #print(pkt[Ether].src)
-            sendp(pkt,iface=iface);
+            #print(pkt.sprintf("Tx>SRC:%Ether.src% DST:%Ether.dst% Type: %Ether.type%"))
+            sendp(pkt,iface=iface, verbose=False);
     sock.close()
 
 def display_iface():
@@ -49,22 +46,27 @@ def display_iface():
     for l in list:
         print((l['name'] + " [" + l['description']) + "]")
         #print(l['ips'])
-        
+        port
 if __name__ == "__main__":
     # Parse the command line arguments.
     parser = argparse.ArgumentParser()
     parser.add_argument('--iface', '-i', required=True)
-    parser.add_argument('--local_ipaddr', '-l', required=False)
-    parser.add_argument('--dst_ipaddr','-t',required=True)
-    parser.add_argument('--local_udpport', '-s', required=False, default=8000, type=int)
-    parser.add_argument('--dst_udpport', '-d', required=False, default=9000, type=int)
+    parser.add_argument('--iface_ipaddr', '-l', required=True)
     args = parser.parse_args()
         
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    # UDP recv configuration (receiver_mcast_address, receiver_port)
+    bind_addr = '0.0.0.0'
+    membership = socket.inet_aton(receiver_mcast_address) + socket.inet_aton(bind_addr)
+    sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, membership)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind((args.local_ipaddr,args.local_udpport))
+    sock.bind((bind_addr, receiver_port))
     
-    raw_rx_thread = threading.Thread(target=raw_receiver,args=(sock,args.iface,(args.dst_ipaddr, args.dst_udpport)))
+    # UDP sender configuration
+    sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(args.iface_ipaddr))
+
+    raw_rx_thread = threading.Thread(target=raw_receiver,args=(sock,args.iface,(sender_mcast_address, sender_port)))
     raw_tx_thread = threading.Thread(target=raw_transmitter,args=(sock,args.iface))
     
     raw_rx_thread.start()
